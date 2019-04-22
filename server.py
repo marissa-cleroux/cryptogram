@@ -5,18 +5,13 @@ game = Cryptogram()
 
 @route('/game')
 def start():
-    content = ''
-    for index, letter in enumerate(game.encoded_quote):
-        content += f'''<div class='letter'>
-                                <span class='guessedLetter'>{game.user_cryptogram[index]}</span>
-                                <span class='encodedLetter'>{letter}</span>
-                            </div>'''
-
-    info = {'content': content, 'title': 'WELCOME'}
+    info = {'game': ~game, 'title': 'WELCOME'}
+    print(~game)
+    print(game.quote)
     return template('main.tpl', info)
 
 
-@route('/game/<change_val>/<enter_val>', method="POST")
+@route('/game/<change_val>/<enter_val>', method="GET")
 def guess(change_val, enter_val):
     game_return = game.guess_letter(change_val, enter_val)
     if game_return == 0:
@@ -27,8 +22,10 @@ def guess(change_val, enter_val):
         pass #error
 
 
-@route('/styles/<filename:path>')
+@route('/<filename:re:.*\.css>')
 def read_file(filename):
+    print('read called')
+    print(filename)
     return static_file(filename, root='./styles/')
 
 

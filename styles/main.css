@@ -1,4 +1,8 @@
-.letter {
+body {
+    font-family: Calibri, Arial, sans-serif;
+}
+
+.el {
     display: inline;
 }
 
@@ -10,3 +14,4 @@
 .encodedLetter {
     padding: 5px;
 }
+
