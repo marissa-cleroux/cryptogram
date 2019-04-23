@@ -1,6 +1,6 @@
 <html>
 <head>
-  <link href='./main.css' rel='stylesheet' type='css'>
+  <link href='main.css' rel='stylesheet' type='css'>
   <title>{{title or 'Cryptogram'}}</title>
 </head>
 <body>
@@ -9,11 +9,11 @@
     </header>
 
   <main>
-      <form action="/game" method="POST" ID='cryptoForm'>
+      <form action="/game" method="POST" ID="cryptoForm" name="cryptoForm">
         <div style="display: flex; flex-wrap: wrap;">
             % for ind in game:
                 <div class="el">
-                    % if game[ind][1] != ' ':
+                    % if game[ind][1] != ' ' and game[ind][0] != ' ':
                         <div class="guessedLetter letter">{{game[ind][0]}}</div>
                         <div class="encodedLetter letter">{{game[ind][1]}}</div>
                     % elif game[ind][0] == ' ' and game[ind][1] == ' ':
@@ -31,14 +31,14 @@
           <br/>
             <div>
                 <label>Changing: </label>
-                <input type='text' name='change_val' id='changeVal' />
+                <input type='text' name='change_val' id='change_val' />
             </div>
             <br/>
             <div>
                 <label>Entering: </label>
-                <input type='text' name='enter_val' id='enterVal' />
+                <input type='text' name='enter_val' id='enter_val' />
             </div>
-            <input type='submit' name='submit' id='submit' value='guess' />
+            <input type='submit' name='sub' id='sub' value='guess' />
         </div>
       </form>
 
@@ -52,11 +52,14 @@
         addEventListener('load', ()=>{
             let form = document.getElementById('cryptoForm');
             form.addEventListener('submit', (e)=>{
+                console.log('Event fired');
                 e.preventDefault();
-                let changeVal = document.getElementById('changeVal');
-                let enterVal = document.getElementById('enterVal');
-                e.target.action = `/game/${changeVal.text}/${enterVal.text}`;
-                e.submit();
+                let changeVal = document.getElementById('change_val');
+                let enterVal = document.getElementById('enter_val');
+                console.log('change', changeVal, changeVal.value);
+                console.log('enter',enterVal, enterVal.value);
+                e.target.action = `/game/${changeVal.value}/${enterVal.value}`;
+                form.submit();
         })
     });
     </script>
