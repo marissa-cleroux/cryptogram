@@ -16,7 +16,7 @@ def start():
     return template('main.tpl', info)
 
 
-@route('/game', method='POST')
+@route('/new_game')
 def new_game():
     game.start_new_game()
     redirect('/game')
