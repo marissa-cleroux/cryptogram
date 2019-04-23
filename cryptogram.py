@@ -26,6 +26,13 @@ class Cryptogram:
     def __invert__(self):
         return {ind: [letter, self.encoded_quote[ind]] for ind, letter in enumerate(self.user_cryptogram)}
 
+    def start_new_game(self):
+        self.quote = self._get_random_quote()
+        self.key = self.randomize_key()
+        self.encoded_quote = self._encode_quote()
+        self.guessed = self._get_empty_guessed()
+        self.user_cryptogram = [' ' for i in self.encoded_quote]
+
     @staticmethod
     def get_quotes():
         url = 'https://litemind.com/best-famous-quotes/'
@@ -59,8 +66,8 @@ class Cryptogram:
 
     def guess_letter(self, change_val, enter_val):
         if self._validate_letter(enter_val):
-            self._change_letter(change_val, enter_val)
-            if self._check_for_win():
+            self._change_letter(change_val.upper(), enter_val.upper())
+            if self.is_win():
                 return self.WIN
             else:
                 return self.STILL_PLAYING
@@ -75,8 +82,8 @@ class Cryptogram:
         self.guessed[change_val] = enter_val
         self.user_cryptogram = [self.guessed[letter] if letter.isalpha() else letter for letter in self.encoded_quote]
 
-    def _check_for_win(self):
-        return self.user_cryptogram == self.quote
+    def is_win(self):
+        return "".join(self.user_cryptogram) == self.quote
 
 
 class MyHTMLParser(HTMLParser):
