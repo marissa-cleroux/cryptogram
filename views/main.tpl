@@ -20,8 +20,8 @@
             <div class="letter">&nbsp;&nbsp;&nbsp;</div>
             <div class="encodedLetter letter">&nbsp;&nbsp;&nbsp;</div>
             % elif not game[ind][1].isalpha() and not game[ind][1].isspace():
-                <div class="guessedLetter">{{game[ind][1]}}</div>
-                <div class="encodedLetter letter">{{game[ind][1]}}</div>
+            <div class="guessedLetter">{{game[ind][1]}}</div>
+            <div class="encodedLetter letter">{{game[ind][1]}}</div>
             % else:
             <div class="guessedLetter">_</div>
             <div class="encodedLetter letter">{{game[ind][1]}}</div>
@@ -29,21 +29,24 @@
         </div>
         % end
     </div>
-    <div id="forms">
-        <form action="/" method="POST" ID="cryptoForm" name="cryptoForm">
-
-            <label title="Always enter the 'encoded' letter for this field">Changing: </label>
-            <input type='text' name='change_val' id='change_val'
-                   title="Always enter the 'encoded' letter for this field" maxlength="1" autofocus/>
-            <label title="The letter you wish to take the place of the 'encoded' letter">Entering: </label>
-            <input type='text' name='enter_val' id='enter_val'
-                   title="The letter you wish to take the place of the 'encoded' letter" maxlength="1"/>
-
-            <br/>
-            <input type='submit' name='sub' id='sub' class="primAction" value='Enter Letter'/>
-            <a href='/new_game' id="new" class="secAction">New Game</a>
-        </form>
+    <div id="lettersLeft" class="center">
+        <h3>Letters left:</h3>
+        {{letters_left}}
     </div>
+
+    <form action="/" method="POST" ID="cryptoForm" name="cryptoForm" class="forms">
+
+        <label title="Always enter the 'encoded' letter for this field">Changing: </label>
+        <input type='text' name='change_val' id='change_val'
+               title="Always enter the 'encoded' letter for this field" maxlength="1" autofocus/>
+        <label title="The letter you wish to take the place of the 'encoded' letter">Entering: </label>
+        <input type='text' name='enter_val' id='enter_val'
+               title="The letter you wish to take the place of the 'encoded' letter" maxlength="1"/>
+
+        <br/>
+        <input type='submit' name='sub' id='sub' class="primAction" value='Enter Letter'/>
+        <a href='/new_game' id="new" class="secAction">New Game</a>
+    </form>
 </main>
 
 <footer>

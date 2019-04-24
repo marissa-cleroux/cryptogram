@@ -2,6 +2,7 @@ from cryptogram import *
 from bottle import route, run, template, static_file, redirect, error
 
 game = Cryptogram()
+game.start_new_game()
 
 
 @route('/')
@@ -11,7 +12,7 @@ def redirect_from_root():
 
 @route('/game')
 def start():
-    info = {'game': ~game, 'title': 'WELCOME'}
+    info = {'game': ~game, 'title': 'WELCOME', 'letters_left': str(game)}
     return template('main.tpl', info)
 
 
@@ -23,7 +24,7 @@ def new_game():
 
 @route('/win')
 def win():
-    info = {'game': ~game, 'title': 'WELCOME'}
+    info = {'game': ~game, 'title': 'WELCOME', 'author': game.quote.author}
     if game.is_win():
         return template('win.tpl', info)
     else:

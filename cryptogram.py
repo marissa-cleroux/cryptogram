@@ -5,26 +5,24 @@ import random
 
 
 class Cryptogram:
-    WIN = 1
-    ERROR = -1
-    STILL_PLAYING = 0
-
     def __init__(self):
         self.quotes = self.get_quotes()
-        self.quote = self._get_random_quote()
-        self.key = self.randomize_key()
-        self.encoded_quote = self._encode_quote()
-        self.guessed = self._get_empty_guessed()
-        self.user_cryptogram = [' ' for i in self.encoded_quote]
-
-    def __str__(self):
-        pass
-
-    def __eq__(self, obj):
-        pass
+        self.quote = None
+        self.key = None
+        self.encoded_quote = None
+        self.guessed = None
+        self.user_cryptogram = None
+        self.ALPHABET = list(map(chr, range(65, 91)))
+        self.WIN = 1
+        self.ERROR = -1
+        self.STILL_PLAYING = 0
 
     def __invert__(self):
         return {ind: [letter, self.encoded_quote[ind]] for ind, letter in enumerate(self.user_cryptogram)}
+
+    def __str__(self):
+        guessed = [v for k, v in self.guessed.items() if v != ' ']
+        return " ".join(sorted([char for char in self.ALPHABET if char not in guessed]))
 
     def start_new_game(self):
         self.quote = self._get_random_quote()
@@ -36,30 +34,29 @@ class Cryptogram:
     @staticmethod
     def get_quotes():
         url = 'https://litemind.com/best-famous-quotes/'
-
-        parser = MyHTMLParser()
+        q_parser = QuoteParser()
         req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
 
         with urlopen(req) as f:
-            page_one = list(line.decode("utf-8").strip() for line in f.readlines())
+            page = list(line.decode("utf-8").strip() for line in f.readlines())
 
-        for eachline in page_one:
-            parser.feed(eachline)
+        for eachline in page:
+            q_parser.feed(eachline)
 
-        return parser.quotes
+        return q_parser.quotes
 
     def _get_random_quote(self):
+        print(self.quotes)
         num = random.randint(0, len(self.quotes))
-        return self.quotes[num].upper()
+        return self.quotes[num]
 
-    @staticmethod
-    def randomize_key():
-        alphabet = list(map(chr, range(65, 91)))
+    def randomize_key(self):
+        alphabet = self.ALPHABET.copy()
         random.shuffle(alphabet)
         return alphabet
 
     def _encode_quote(self):
-        return "".join([self.key[ord(letter) - 65] if letter.isalpha() else letter for letter in self.quote])
+        return "".join([self.key[ord(char) - 65] if char.isalpha() else char for char in self.quote.quote])
 
     def _get_empty_guessed(self):
         return {letter: ' ' for letter in self.key}
@@ -78,31 +75,50 @@ class Cryptogram:
     def _validate_letters(change_val, enter_val):
         if not change_val or not enter_val:
             return False
-        return bool(re.match('^[A-Za-z]$', enter_val)) and bool(re.match('^[A-Za-z]$', change_val))
+        return change_val.isalpha() and enter_val.isalpha()
 
     def _change_letter(self, change_val, enter_val):
         self.guessed[change_val] = enter_val
         self.user_cryptogram = [self.guessed[letter] if letter.isalpha() else letter for letter in self.encoded_quote]
 
     def is_win(self):
-        return "".join(self.user_cryptogram) == self.quote
+        return "".join(self.user_cryptogram) == self.quote.quote
 
 
-class MyHTMLParser(HTMLParser):
-    quotes = list()
-    is_quote = False
+class QuoteParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.quotes = list()
+        self.curr_quote = None
+        self.is_quote = False
+        self.is_author = False
 
     def handle_starttag(self, tag, attrs):
         if tag == 'div' and attrs[0][0] == 'class' and attrs[0][1] == 'wp_quotepage_quote':
             self.is_quote = True
+        elif tag == 'div' and attrs[0][0] == 'class'and attrs[0][1] == 'wp_quotepage_author':
+            self.is_author = True
 
     def handle_endtag(self, tag):
         if self.is_quote:
             self.is_quote = False
+        elif self.is_author:
+            self.is_author = False
 
     def handle_data(self, data):
         if self.is_quote:
-            m = re.match('^[0-9]*[.] ', data)
-            if m:
-                self.quotes.append(data[m.end(0):])
+            match = re.match('^[0-9]*[.] ', data)
+            if match:
+                self.curr_quote = Quote(data[match.end(0):].upper())
+        elif self.is_author:
+            self.curr_quote.author = data
+            self.quotes.append(self.curr_quote)
+
+
+class Quote:
+    def __init__(self, quote):
+        self.quote = quote
+        self.author = None
+
+
 

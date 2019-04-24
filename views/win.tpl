@@ -23,7 +23,8 @@
         </div>
         % end
     </div>
-    <div id="forms">
+    <div id="author">{{author}}</div>
+    <div class="center">
         <a href='/new_game' id="new" class="primAction">New Game</a>
     </div>
 </main>
