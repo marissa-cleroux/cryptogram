@@ -9,10 +9,8 @@
     <h1>ERROR</h1>
 </header>
 
-<main>
-    <div ID="crypto">
-        <h4>{{content}}</h4>
-    </div>
+<main ID="error">
+    <h4>{{content}}</h4>
     <a href='/game' class="primAction">Back to Game</a>
     <br/>
     <br/>

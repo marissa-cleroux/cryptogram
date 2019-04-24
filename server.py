@@ -44,9 +44,9 @@ def change_letter(change_val=None, enter_val=None):
         redirect('/error')
     else:
         game_return = game.guess_letter(change_val, enter_val)
-        if game_return == 0:
+        if game_return == game.STILL_PLAYING:
             redirect('/game')
-        elif game_return == 1:
+        elif game_return == game.WIN:
             redirect('/win')
 
 
