@@ -64,8 +64,8 @@ class Cryptogram:
     def _get_empty_guessed(self):
         return {letter: ' ' for letter in self.key}
 
-    def guess_letter(self, change_val, enter_val):
-        if self._validate_letter(enter_val):
+    def guess_letter(self, change_val=None, enter_val=None):
+        if self._validate_letters(change_val, enter_val):
             self._change_letter(change_val.upper(), enter_val.upper())
             if self.is_win():
                 return self.WIN
@@ -75,8 +75,10 @@ class Cryptogram:
             return self.ERROR
 
     @staticmethod
-    def _validate_letter(enter_val):
-        return bool(re.match('^[A-Za-z]$', enter_val))
+    def _validate_letters(change_val, enter_val):
+        if not change_val or not enter_val:
+            return False
+        return bool(re.match('^[A-Za-z]$', enter_val)) and bool(re.match('^[A-Za-z]$', change_val))
 
     def _change_letter(self, change_val, enter_val):
         self.guessed[change_val] = enter_val

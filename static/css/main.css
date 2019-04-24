@@ -30,6 +30,7 @@ a {
 
 .el {
     display: inline;
+    margin-right: 5px;
 }
 
 
@@ -39,7 +40,7 @@ a {
     background-color: #fff;
 }
 
-.guessedLetter, .encodedLetter, input[type="text"], #sub, #new {
+.guessedLetter, .encodedLetter, input[type="text"], .primAction, .secAction {
     padding: 5px;
 }
 
@@ -68,29 +69,21 @@ input[type="text"] {
 
 #sub {
     cursor: pointer;
+}
+
+.primAction {
     border: 2px solid #120309;
     background-color: #ADCFD6;
     color: #000;
     width: 100px;
 }
 
-#sub:hover, #new:hover {
-    -webkit-box-shadow: 5px 5px 23px -5px rgba(0,0,0,0.75);
-    -moz-box-shadow: 5px 5px 23px -5px rgba(0,0,0,0.75);
-    box-shadow: 5px 5px 23px -5px rgba(0,0,0,0.75);
-}
-
-#sub:hover{
+.primAction:hover {
     border: 2px solid #120309;
     background-color: #048A81;
     color: #fff;
 }
-
-#sub, #new {
-    grid-column: 3/4;
-}
-
-#new {
+.secAction {
     border: 2px solid darkgray;
     background-color: #fff;
     color: #000;
@@ -99,6 +92,15 @@ input[type="text"] {
     font-size: 0.95em;
 }
 
+.primAction:hover, .secAction:hover {
+    -webkit-box-shadow: 5px 5px 23px -5px rgba(0,0,0,0.75);
+    -moz-box-shadow: 5px 5px 23px -5px rgba(0,0,0,0.75);
+    box-shadow: 5px 5px 23px -5px rgba(0,0,0,0.75);
+}
+
+#sub, #new {
+    grid-column: 3/4;
+}
 
 footer {
     margin-top: 35px;

@@ -1,5 +1,5 @@
 from cryptogram import *
-from bottle import route, run, template, static_file, redirect
+from bottle import route, run, template, static_file, redirect, error
 
 game = Cryptogram()
 
@@ -12,7 +12,6 @@ def redirect_from_root():
 @route('/game')
 def start():
     info = {'game': ~game, 'title': 'WELCOME'}
-    print(game.quote)
     return template('main.tpl', info)
 
 
@@ -33,11 +32,15 @@ def win():
 
 @route('/error')
 def error():
-    pass
+    return template('error.tpl', content='You must enter letters in both fields.')
 
 
+@route('/game/', method="POST")
+@route('/game//', method="POST")
+@route('/game/<change_val>/', method="POST")
+@route('/game//<enter_val>', method="POST")
 @route('/game/<change_val>/<enter_val>', method="POST")
-def guess(change_val, enter_val):
+def guess(change_val=None, enter_val=None):
     game_return = game.guess_letter(change_val, enter_val)
     if game_return == 0:
         redirect('/game')
@@ -47,15 +50,20 @@ def guess(change_val, enter_val):
         redirect('/error')
 
 
-@route('/css/<filename:re:.*\.css>')
+@route('/<filename:re:.*\.css>')
 def read_css(filename):
-    print('read called')
     return static_file('main.css', root='static/css')
 
 
 @route('/<filename:re:.*\.ico>')
 def read_ico(filename):
     return static_file('favicon.ico', root='./')
+
+
+@route('/<filename:re:.*\.js>')
+def read_js(filename):
+    print('read')
+    return static_file('changeAction.js', root='static/js')
 
 
 run(host='localhost', port=9001, debug=True)
