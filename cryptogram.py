@@ -14,7 +14,6 @@ class Cryptogram:
         self.user_cryptogram = None
         self.ALPHABET = list(map(chr, range(65, 91)))
         self.WIN = 1
-        self.ERROR = -1
         self.STILL_PLAYING = 0
 
     def __invert__(self):
@@ -46,8 +45,7 @@ class Cryptogram:
         return q_parser.quotes
 
     def _get_random_quote(self):
-        print(self.quotes)
-        num = random.randint(0, len(self.quotes))
+        num = random.randint(0, len(self.quotes) - 1)
         return self.quotes[num]
 
     def randomize_key(self):
@@ -62,20 +60,15 @@ class Cryptogram:
         return {letter: ' ' for letter in self.key}
 
     def guess_letter(self, change_val=None, enter_val=None):
-        if self._validate_letters(change_val, enter_val):
-            self._change_letter(change_val.upper(), enter_val.upper())
-            if self.is_win():
-                return self.WIN
-            else:
-                return self.STILL_PLAYING
-        else:
-            return self.ERROR
+        self._change_letter(change_val.upper(), enter_val.upper())
+        return self.WIN if self.is_win() else self.STILL_PLAYING
 
     @staticmethod
-    def _validate_letters(change_val, enter_val):
+    def check_letter(change_val=None, enter_val=None):
         if not change_val or not enter_val:
-            return False
-        return change_val.isalpha() and enter_val.isalpha()
+            raise ValueError
+        elif not change_val.isalpha() or not enter_val.isalpha():
+            raise ValueError
 
     def _change_letter(self, change_val, enter_val):
         self.guessed[change_val] = enter_val
@@ -110,7 +103,7 @@ class QuoteParser(HTMLParser):
             match = re.match('^[0-9]*[.] ', data)
             if match:
                 self.curr_quote = Quote(data[match.end(0):].upper())
-        elif self.is_author:
+        elif self.is_author and self.curr_quote.quote:
             self.curr_quote.author = data
             self.quotes.append(self.curr_quote)
 

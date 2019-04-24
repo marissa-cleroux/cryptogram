@@ -6,10 +6,6 @@ game.start_new_game()
 
 
 @route('/')
-def redirect_from_root():
-    redirect('/game')
-
-
 @route('/game')
 def start():
     info = {'game': ~game, 'title': 'WELCOME', 'letters_left': str(game)}
@@ -41,14 +37,17 @@ def error():
 @route('/game/<change_val>/', method="POST")
 @route('/game//<enter_val>', method="POST")
 @route('/game/<change_val>/<enter_val>', method="POST")
-def guess(change_val=None, enter_val=None):
-    game_return = game.guess_letter(change_val, enter_val)
-    if game_return == 0:
-        redirect('/game')
-    elif game_return == 1:
-        redirect('/win')
-    else:
+def change_letter(change_val=None, enter_val=None):
+    try:
+        game.check_letter(change_val, enter_val)
+    except ValueError:
         redirect('/error')
+    else:
+        game_return = game.guess_letter(change_val, enter_val)
+        if game_return == 0:
+            redirect('/game')
+        elif game_return == 1:
+            redirect('/win')
 
 
 @route('/<filename:re:.*\.css>')
@@ -59,12 +58,6 @@ def read_css(filename):
 @route('/<filename:re:.*\.ico>')
 def read_ico(filename):
     return static_file('favicon.ico', root='./')
-
-
-@route('/<filename:re:.*\.js>')
-def read_js(filename):
-    print('read')
-    return static_file('changeAction.js', root='static/js')
 
 
 run(host='localhost', port=9001, debug=True)
