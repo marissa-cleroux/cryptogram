@@ -1,3 +1,4 @@
+import os
 from cryptogram import *
 from bottle import route, run, template, static_file, redirect, error
 
