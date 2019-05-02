@@ -1,6 +1,8 @@
 from cryptogram import *
 from bottle import route, run, template, static_file, redirect, error
 
+port = os.environ.get('PORT', 5000)
+
 game = Cryptogram()
 game.start_new_game()
 
@@ -60,4 +62,4 @@ def read_ico(filename):
     return static_file('favicon.ico', root='./')
 
 
-run(host='localhost', port=9001, debug=True)
+run(host='0.0.0.0', port=port, debug=True)
