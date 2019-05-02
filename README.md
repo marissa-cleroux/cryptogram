@@ -3,7 +3,7 @@
 ### Python
 Completed in Programming IV. Python cryptogram.
 
-**Requirements:** Create a cryptogram game that uses random quotes scraped from a website. Implement simple page that make requests to server using the bottle library.
+**Requirements:** Create a cryptogram game that uses random quotes scraped from a website. Implement simple page using templates. 
 
 **Completed by:** Marissa Cleroux
 
